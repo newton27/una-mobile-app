@@ -1,4 +1,3 @@
-import { OneSignal } from 'react-native-onesignal';
 import { WebViewHandlers } from "../types/webview-handlers-type";
 
 /**
@@ -24,26 +23,7 @@ export const handleWebViewMessage =
             handlers.setLoading?.(false);
         }
 
-        // --- PUSH TAGS / ONESIGNAL ---
-        if (oMsgData.loggedin && oMsgData.push_tags && oMsgData.push_tags !== false) {
-            const tags = oMsgData.push_tags;
-
-            if (tags.user?.length) {
-                console.log("User ID: " + JSON.stringify(tags.user));
-                OneSignal.login(tags.user);
-            }
-
-            if (tags.email?.length) {
-                OneSignal.User.addEmail(tags.email);
-                delete tags.email;
-                delete tags.email_hash;
-            }
-
-            OneSignal.User.addTags(tags);
-        }
-        if (oMsgData.loggedin === false) {
-            OneSignal.logout();
-        }
+        // Push tags are ignored in the Expo Go preview.
 
         // --- STOP LOADING ---
         if (oMsgData.stop_loading) {

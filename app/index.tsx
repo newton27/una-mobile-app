@@ -3,12 +3,10 @@ import { useColorScheme } from '@/hooks/use-color-scheme';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useEffect, useRef, useState } from "react";
 import { BackHandler, Platform, StyleSheet } from "react-native";
-import { LogLevel, OneSignal } from 'react-native-onesignal';
 import { WebView, WebViewNavigation } from "react-native-webview";
 import BottomTabs from "../components/bottom-tabs";
 import Header from "../components/header";
 import WebViewContainer from "../components/web-view";
-import { ONESIGNAL_APP_ID } from "../constants/settings";
 import { WebViewHandlers } from "../types/webview-handlers-type";
 import { requestAndroidPermissions } from "../utils/android-permissins-request";
 
@@ -28,20 +26,7 @@ export default function App() {
         requestAndroidPermissions();
     }, []);
 
-    // OneSignal initialization
-    useEffect(() => {        
-        OneSignal.Debug.setLogLevel(LogLevel.Verbose);
-        OneSignal.setConsentRequired(true);
-        OneSignal.initialize(ONESIGNAL_APP_ID);
-
-        OneSignal.Notifications.addEventListener('click', (event:any) => {
-            console.log('OneSignal: notification clicked:', event);
-            const url = event.notification?.additionalData?.url;
-            if (url && webViewRef.current) {
-                webViewRef.current.injectJavaScript(`window.location = '${url}';`);
-            }            
-        });
-    }, []);
+    // Push notifications are disabled in the Expo Go preview.
 
     // Android hardware back button
     useEffect(() => {        
